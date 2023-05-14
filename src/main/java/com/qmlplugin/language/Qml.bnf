@@ -1,0 +1,30 @@
+{
+  parserClass="com.qmlplugin.language.parser.QmlParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Qml"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.qmlplugin.language.psi"
+  psiImplPackage="com.qmlplugin.language.psi.impl"
+
+  elementTypeHolderClass="com.qmlplugin.language.psi.QmlTypes"
+  elementTypeClass="com.qmlplugin.language.psi.QmlElementType"
+  tokenTypeClass="com.qmlplugin.language.psi.QmlTokenType"
+
+  psiImplUtilClass="com.qmlplugin.language.psi.impl.QmlPsiImplUtil"
+}
+
+simpleFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF|KEYWORD)
+
+property ::= (KEY? SEPARATOR VALUE?) | KEY {
+  pin=3
+  recoverWhile="recover_property"
+  mixin="com.qmlplugin.language.psi.impl.QmlNamedElementImpl"
+  implements="com.qmlplugin.language.psi.QmlNamedElement"
+  methods=[getKey getValue getName setName getNameIdentifier getPresentation]
+}
+
+private recover_property ::= !(KEY|SEPARATOR|COMMENT)
