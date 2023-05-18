@@ -17,7 +17,7 @@
 
 simpleFile ::= item_*
 
-private item_ ::= (property|COMMENT|CRLF|KEYWORD)
+private item_ ::= (KEYWORD|property|COMMENT|CRLF)
 
 property ::= (KEY? SEPARATOR VALUE?) | KEY {
   pin=3

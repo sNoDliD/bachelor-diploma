@@ -8,4 +8,6 @@ public interface QmlTokenSets {
 
     TokenSet COMMENTS = TokenSet.create(QmlTypes.COMMENT);
 
+    TokenSet KEYWORD = TokenSet.create(QmlTypes.KEYWORD);
+
 }

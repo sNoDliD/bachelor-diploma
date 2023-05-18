@@ -37,6 +37,7 @@ Features for successful parsed files:
   <!-- Product and plugin compatibility requirements.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
   <depends>com.intellij.modules.platform</depends>
+<!--  <depends>com.intellij.java</depends>-->
 
   <!-- Extension points defined by the plugin.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -44,16 +45,16 @@ Features for successful parsed files:
 
     <fileType name="QML File" implementationClass="com.qmlplugin.language.QmlFileType" fieldName="INSTANCE"
               language="QML" extensions="qml"/>
-<!--    <lang.parserDefinition language="Qml" implementationClass="com.qmlplugin.language.QmlParserDefinition"/>-->
+    <lang.parserDefinition language="QML" implementationClass="com.qmlplugin.language.QmlParserDefinition"/>
     <lang.syntaxHighlighterFactory language="QML"
                                    implementationClass="com.qmlplugin.language.QmlSyntaxHighlighterFactory"/>
 <!--    <iconProvider implementation="com.qmlplugin.language.QmlPropertyIconProvider"/>-->
-<!--    <colorSettingsPage implementation="com.qmlplugin.language.QmlColorSettingsPage"/>-->
-<!--    <annotator language="JAVA" implementationClass="com.qmlplugin.language.QmlAnnotator"/>-->
-<!--    <codeInsight.lineMarkerProvider language="JAVA"-->
-<!--                                    implementationClass="com.qmlplugin.language.QmlLineMarkerProvider"/>-->
-<!--    <completion.contributor language="Qml"-->
-<!--                            implementationClass="com.qmlplugin.language.QmlCompletionContributor"/>-->
+    <colorSettingsPage implementation="com.qmlplugin.language.QmlColorSettingsPage"/>
+    <annotator language="QML" implementationClass="com.qmlplugin.language.QmlAnnotator"/>
+    <codeInsight.lineMarkerProvider language="QML"
+                                    implementationClass="com.qmlplugin.language.QmlLineMarkerProvider"/>
+    <completion.contributor language="QML"
+                            implementationClass="com.qmlplugin.language.QmlCompletionContributor"/>
 <!--    <psi.referenceContributor language="JAVA"-->
 <!--                              implementation="com.qmlplugin.language.QmlReferenceContributor"/>-->
 <!--    <lang.refactoringSupport language="Qml"-->
@@ -71,5 +72,8 @@ Features for successful parsed files:
 <!--    <lang.commenter language="Qml" implementationClass="com.qmlplugin.language.QmlCommenter"/>-->
 <!--    <lang.documentationProvider language="Qml" implementationClass="com.qmlplugin.language.QmlDocumentationProvider"/>-->
 <!--    <spellchecker.support language="Qml" implementationClass="com.qmlplugin.language.QmlSpellcheckingStrategy"/>-->
+
+    <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
+
   </extensions>
 </idea-plugin>

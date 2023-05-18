@@ -36,15 +36,15 @@ public class QmlParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // property|COMMENT|CRLF|KEYWORD
+  // KEYWORD|property|COMMENT|CRLF
   static boolean item_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "item_")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = property(b, l + 1);
+    r = consumeToken(b, KEYWORD);
+    if (!r) r = property(b, l + 1);
     if (!r) r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, CRLF);
-    if (!r) r = consumeToken(b, KEYWORD);
     exit_section_(b, m, null, r);
     return r;
   }

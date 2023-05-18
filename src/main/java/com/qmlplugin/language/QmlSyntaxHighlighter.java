@@ -25,7 +25,7 @@ public class QmlSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey BAD_CHARACTER =
             createTextAttributesKey("SIMPLE_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
     public static final TextAttributesKey KEYWORD =
-            createTextAttributesKey("SIMPLE_KEYWORD", HighlighterColors.TEXT);
+            createTextAttributesKey("SIMPLE_KEYWORD", DefaultLanguageHighlighterColors.NUMBER);
 
 
     private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};

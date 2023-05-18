@@ -8,3 +8,5 @@ x := 2
 for x in [22, 2] {
     print(x)
 }
+
+test = qml:web
