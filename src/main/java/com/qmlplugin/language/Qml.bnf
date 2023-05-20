@@ -15,9 +15,11 @@
   psiImplUtilClass="com.qmlplugin.language.psi.impl.QmlPsiImplUtil"
 }
 
-simpleFile ::= item_*
+qmlFile ::= item_*
+//qmlFile ::= EOF? item_* EOF?
 
 private item_ ::= (KEYWORD|property|COMMENT|CRLF)
+//private eof_ ::= (EOF)
 
 property ::= (KEY? SEPARATOR VALUE?) | KEY {
   pin=3
@@ -27,4 +29,4 @@ property ::= (KEY? SEPARATOR VALUE?) | KEY {
   methods=[getKey getValue getName setName getNameIdentifier getPresentation]
 }
 
-private recover_property ::= !(KEY|SEPARATOR|COMMENT)
+private recover_property ::= !(KEY|SEPARATOR|COMMENT|KEYWORD)

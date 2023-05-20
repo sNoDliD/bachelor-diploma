@@ -48,30 +48,31 @@ Features for successful parsed files:
     <lang.parserDefinition language="QML" implementationClass="com.qmlplugin.language.QmlParserDefinition"/>
     <lang.syntaxHighlighterFactory language="QML"
                                    implementationClass="com.qmlplugin.language.QmlSyntaxHighlighterFactory"/>
-<!--    <iconProvider implementation="com.qmlplugin.language.QmlPropertyIconProvider"/>-->
+    <iconProvider implementation="com.qmlplugin.language.QmlPropertyIconProvider"/>
     <colorSettingsPage implementation="com.qmlplugin.language.QmlColorSettingsPage"/>
     <annotator language="QML" implementationClass="com.qmlplugin.language.QmlAnnotator"/>
     <codeInsight.lineMarkerProvider language="QML"
                                     implementationClass="com.qmlplugin.language.QmlLineMarkerProvider"/>
     <completion.contributor language="QML"
                             implementationClass="com.qmlplugin.language.QmlCompletionContributor"/>
-<!--    <psi.referenceContributor language="JAVA"-->
-<!--                              implementation="com.qmlplugin.language.QmlReferenceContributor"/>-->
-<!--    <lang.refactoringSupport language="Qml"-->
-<!--                             implementationClass="com.qmlplugin.language.QmlRefactoringSupportProvider"/>-->
-<!--    <lang.findUsagesProvider language="Qml"-->
-<!--                             implementationClass="com.qmlplugin.language.QmlFindUsagesProvider"/>-->
-<!--    <lang.foldingBuilder language="JAVA" implementationClass="com.qmlplugin.language.QmlFoldingBuilder"/>-->
-<!--    <gotoSymbolContributor implementation="com.qmlplugin.language.QmlChooseByNameContributor"/>-->
-<!--    <lang.psiStructureViewFactory language="Qml"-->
-<!--                                  implementationClass="com.qmlplugin.language.QmlStructureViewFactory"/>-->
+
+    <psi.referenceContributor language="QML"
+                              implementation="com.qmlplugin.language.QmlReferenceContributor"/>
+    <lang.refactoringSupport language="QML"
+                             implementationClass="com.qmlplugin.language.QmlRefactoringSupportProvider"/>
+    <lang.findUsagesProvider language="QML"
+                             implementationClass="com.qmlplugin.language.QmlFindUsagesProvider"/>
+    <lang.foldingBuilder language="QML" implementationClass="com.qmlplugin.language.QmlFoldingBuilder"/>
+    <gotoSymbolContributor implementation="com.qmlplugin.language.QmlChooseByNameContributor"/>
+    <lang.psiStructureViewFactory language="QML"
+                                  implementationClass="com.qmlplugin.language.QmlStructureViewFactory"/>
 <!--    <navbar implementation="com.qmlplugin.language.QmlStructureAwareNavbar"/>-->
-<!--    <lang.formatter language="Qml" implementationClass="com.qmlplugin.language.QmlFormattingModelBuilder"/>-->
-<!--    <codeStyleSettingsProvider implementation="com.qmlplugin.language.QmlCodeStyleSettingsProvider"/>-->
-<!--    <langCodeStyleSettingsProvider implementation="com.qmlplugin.language.QmlLanguageCodeStyleSettingsProvider"/>-->
-<!--    <lang.commenter language="Qml" implementationClass="com.qmlplugin.language.QmlCommenter"/>-->
-<!--    <lang.documentationProvider language="Qml" implementationClass="com.qmlplugin.language.QmlDocumentationProvider"/>-->
-<!--    <spellchecker.support language="Qml" implementationClass="com.qmlplugin.language.QmlSpellcheckingStrategy"/>-->
+    <lang.formatter language="QML" implementationClass="com.qmlplugin.language.QmlFormattingModelBuilder"/>
+    <codeStyleSettingsProvider implementation="com.qmlplugin.language.QmlCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider implementation="com.qmlplugin.language.QmlLanguageCodeStyleSettingsProvider"/>
+    <lang.commenter language="QML" implementationClass="com.qmlplugin.language.QmlCommenter"/>
+    <lang.documentationProvider language="QML" implementationClass="com.qmlplugin.language.QmlDocumentationProvider"/>
+    <spellchecker.support language="QML" implementationClass="com.qmlplugin.language.QmlSpellcheckingStrategy"/>
 
     <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
 

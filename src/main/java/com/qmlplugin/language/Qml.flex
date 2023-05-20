@@ -20,15 +20,32 @@ WHITE_SPACE=[\ \n\t\f]
 FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
 VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
 END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
+//BLOCK_COMMENT_START="/*"
+//BLOCK_COMMENT_END="*/"
 SEPARATOR=[:=]
 KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
 KEYWORDS="for" | "in"
 
 %state WAITING_VALUE
+//%state BLOCK_OF_COMMENT
 
 %%
 
 <YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return QmlTypes.COMMENT; }
+//<YYINITIAL> {BLOCK_COMMENT_START}                           { yybegin(BLOCK_OF_COMMENT); continue; }
+//<BLOCK_OF_COMMENT> {BLOCK_COMMENT_END}                      { yybegin(YYINITIAL); return QmlTypes.COMMENT; }
+//<BLOCK_OF_COMMENT> [^]                                      { continue; }
+
+
+//<YYINITIAL> "/*" {
+//    yybegin(BLOCK_OF_COMMENT);
+//}
+////<BLOCK_OF_COMMENT> [^]                                      { continue; }
+//
+//<BLOCK_OF_COMMENT> ([^]|CRLF)* "*/" {
+//    yybegin(YYINITIAL); return QmlTypes.COMMENT;
+//}
+
 
 <YYINITIAL> {KEYWORDS}                                      { yybegin(YYINITIAL); return QmlTypes.KEYWORD; }
 
