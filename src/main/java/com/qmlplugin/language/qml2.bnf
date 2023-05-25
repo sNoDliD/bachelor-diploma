@@ -1,0 +1,58 @@
+{
+  tokens=[
+    SEMI=';'
+    EQ='='
+    LP='('
+    RP=')'
+
+    NEW_LINE='regexp:\s*\n+'
+    space='regexp:\s+'
+    lint_comment='regexp://.*'
+    comment='regexp:(//.*)|(\/\*(.|\s)*?\*\/)'
+    number='regexp:\d+(\.\d*)?'
+    FLOAT='regexp:\d+(\.\d*)?'
+    KEYWORD='regexp:import|as'
+//    IDENTIFIER='regexp:\w*'
+    IDENTIFIER='regexp:\p{Alpha}\w*'
+    STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
+
+    op_1='+'
+    op_2='-'
+    op_3='*'
+    op_4='/'
+    op_5='!'
+    dot='.'
+  ]
+
+//  name(".*expr")='expression'
+//  extends(".*expr")=expr
+}
+
+root ::= imports qml_object?
+//root ::= imports
+//root ::= qml_object
+
+//imports ::= (comment NEW_LINE? | import_item NEW_LINE?)*
+private imports ::= (NEW_LINE | comment | (import_item (NEW_LINE | SEMI)))* {
+//consumeTokenMethod
+}
+private imports_recover ::= !qml_object
+//import_item ::= !<<eof>> "import" import_location ("as" identifier)? (NEW_LINE | SEMI) {
+import_item ::= "import" comment* import_location ["as" identifier] {
+    pin = 1
+    recoverWhile=import_item_recover
+}
+private import_item_recover ::= !("import" | NEW_LINE | SEMI)
+private import_location ::= import_version | import_path {
+//    recoverWhile=test_patt
+}
+import_version ::= import_name FLOAT
+import_name ::= identifier [DOT identifier]
+
+import_path ::= string
+
+qml_object ::= IDENTIFIER "{" ( NEW_LINE)*  "}" {
+    pin=1
+    recoverWhile=qml_object_recover
+}
+private qml_object_recover ::= !("}")
