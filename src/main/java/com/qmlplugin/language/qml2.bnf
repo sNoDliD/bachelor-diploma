@@ -5,10 +5,10 @@
     LP='('
     RP=')'
 
-    NEW_LINE='regexp:\s*\n+'
+    NEW_LINE='regexp:\s*\n+\s*'
     space='regexp:\s+'
     lint_comment='regexp://.*'
-    comment='regexp:(//.*)|(\/\*(.|\s)*?\*\/)'
+    comment='regexp:(//.*)|(/\*(.|\s)*?\*/)'
     number='regexp:\d+(\.\d*)?'
     FLOAT='regexp:\d+(\.\d*)?'
     KEYWORD='regexp:import|as'
@@ -26,33 +26,55 @@
 
 //  name(".*expr")='expression'
 //  extends(".*expr")=expr
+    pin("import_.*")=1
 }
 
-root ::= imports qml_object?
+root ::= imports root_object? (NEW_LINE | comment)*
 //root ::= imports
 //root ::= qml_object
 
-//imports ::= (comment NEW_LINE? | import_item NEW_LINE?)*
-private imports ::= (NEW_LINE | comment | (import_item (NEW_LINE | SEMI)))* {
-//consumeTokenMethod
-}
-private imports_recover ::= !qml_object
-//import_item ::= !<<eof>> "import" import_location ("as" identifier)? (NEW_LINE | SEMI) {
-import_item ::= "import" comment* import_location ["as" identifier] {
-    pin = 1
+// IMPORTS
+private imports ::= (NEW_LINE | comment | (import_item (NEW_LINE | SEMI)))*
+import_item ::= !<<eof>> "import" comment* import_location ["as" identifier] {
+    pin=2
     recoverWhile=import_item_recover
 }
-private import_item_recover ::= !("import" | NEW_LINE | SEMI)
-private import_location ::= import_version | import_path {
-//    recoverWhile=test_patt
-}
-import_version ::= import_name FLOAT
-import_name ::= identifier [DOT identifier]
+private import_item_recover ::= !(NEW_LINE | SEMI)
 
+private import_location ::= import_version | import_path
+import_version ::= import_name FLOAT
+import_name ::= identifier [DOT identifier] {
+    pin=1
+    recoverWhile=import_name_recover
+}
+private import_name_recover ::= !(NEW_LINE | FLOAT)
 import_path ::= string
 
-qml_object ::= IDENTIFIER "{" ( NEW_LINE)*  "}" {
+// OBJECT
+root_object ::= !<<eof>> qml_object
+
+qml_object ::= object_name "{" (NEW_LINE | comment | assignment_item (NEW_LINE | SEMI))*  "}" {
     pin=1
     recoverWhile=qml_object_recover
 }
-private qml_object_recover ::= !("}")
+private qml_object_recover ::= !("}" | ) // WTF
+//private qml_object_recover ::= !("}" | <<eof>>)
+object_name ::= identifier [DOT identifier] {
+    pin=1
+//    recoverWhile=object_name_recover
+}
+private object_name_recover ::= !("{")
+
+assignment_item ::= assignment_name ":" assignment_value {
+    pin(".*")=1
+//    recoverWhile=assignment_item_recover
+}
+private assignment_item_recover ::= !("}" | NEW_LINE | SEMI)
+assignment_value ::= float | number | string | dotted_name
+
+//import_name ::= dotted_name
+assignment_name ::= dotted_name
+private dotted_name ::= identifier [DOT identifier] {
+//    pin=1
+//    recoverWhile=dotted_name_recover
+}
