@@ -53,7 +53,7 @@ public class QmlSpellcheckingStrategy extends SpellcheckingStrategy {
 
         public void tokenize(@NotNull QmlProperty element, TokenConsumer consumer) {
             //Spell check the keys and values of properties with different splitters
-            final ASTNode key = element.getNode().findChildByType(QmlTypes.KEY);
+            final ASTNode key = element.getNode().findChildByType(QmlTypes.DOT_CHAIN_NAME);
             if (key != null && key.getTextLength() > 0) {
                 final PsiElement keyPsi = key.getPsi();
                 final String text = key.getText();
@@ -63,7 +63,7 @@ public class QmlSpellcheckingStrategy extends SpellcheckingStrategy {
                         TextRange.allOf(text), IdentifierSplitter.getInstance());
             }
 
-            final ASTNode value = element.getNode().findChildByType(QmlTypes.VALUE);
+            final ASTNode value = element.getNode().findChildByType(QmlTypes.DOT_CHAIN_NAME);
             if (value != null && value.getTextLength() > 0) {
                 final PsiElement valuePsi = value.getPsi();
                 final String text = valuePsi.getText();

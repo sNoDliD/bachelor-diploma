@@ -17,7 +17,7 @@ public class QmlFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getName() {
-        return "QML File";
+        return "QML";
     }
 
     @NotNull

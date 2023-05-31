@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class QmlCompletionContributor extends CompletionContributor {
     public QmlCompletionContributor() {
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(QmlTypes.VALUE),
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(QmlTypes.DOT_CHAIN_NAME),
                 new CompletionProvider<>() {
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                @NotNull ProcessingContext context,

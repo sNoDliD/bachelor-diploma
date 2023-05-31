@@ -1,0 +1,37 @@
+//program ::= (statement SEMI)*
+//private statement ::= variableDeclaration | functionDeclaration | assignment | returnStatement | ifStatement | whileStatement | switchStatement | tryCatchStatement | throwStatement | (ID ASSIGNMENT expression)
+//variableDeclaration ::= (LET | VAR | CONST) ID ASSIGNMENT? expression?
+//functionDeclaration ::= (ASYNC)? FUNCTION ID? LPAREN parameterList? RPAREN LBRACE program RBRACE
+//parameterList ::= ID (COMMA ID)*
+//returnStatement ::= RETURN expression?
+//ifStatement ::= IF LPAREN expression RPAREN statement (ELSE statement)?
+//whileStatement ::= WHILE LPAREN expression RPAREN statement
+//switchStatement ::= SWITCH LPAREN expression RPAREN LBRACE caseStatement* (defaultStatement)? RBRACE
+//caseStatement ::= CASE expression COLON program
+//defaultStatement ::= DEFAULT COLON program
+//assignment ::= ID ASSIGNMENT expression
+//expression ::= ID | functionDeclaration | LPAREN expression RPAREN | expression (PLUS | MINUS | TIMES | DIVIDE) expression | arrayDeclaration
+//arrayDeclaration ::= LBRACKET (expression (COMMA expression)*)? RBRACKET
+//tryCatchStatement ::= TRY LBRACE program RBRACE CATCH LPAREN ID RPAREN LBRACE program RBRACE (FINALLY LBRACE program RBRACE)?
+//throwStatement ::= THROW expression
+
+
+program ::= (statement SEMI)*
+private statement ::= variableDeclaration | functionDeclaration | assignment | returnStatement | ifStatement | whileStatement | switchStatement | tryCatchStatement | throwStatement | forStatement | (ID ASSIGNMENT expression) | (ID LPAREN argumentList? RPAREN)
+variableDeclaration ::= (LET | VAR | CONST) ID ASSIGNMENT? expression?
+functionDeclaration ::= (ASYNC)? FUNCTION ID? LPAREN parameterList? RPAREN LBRACE program RBRACE
+parameterList ::= ID (COMMA ID)*
+returnStatement ::= RETURN expression?
+ifStatement ::= IF LPAREN expression RPAREN statement (ELSE statement)?
+whileStatement ::= WHILE LPAREN expression RPAREN statement
+switchStatement ::= SWITCH LPAREN expression RPAREN LBRACE caseStatement* (defaultStatement)? RBRACE
+caseStatement ::= CASE expression COLON program
+defaultStatement ::= DEFAULT COLON program
+assignment ::= ID ASSIGNMENT expression
+expression ::= ID | functionDeclaration | LPAREN expression RPAREN | expression (PLUS | MINUS | TIMES | DIVIDE) expression | arrayDeclaration | functionCall
+arrayDeclaration ::= LBRACKET (expression (COMMA expression)*)? RBRACKET
+tryCatchStatement ::= TRY LBRACE program RBRACE CATCH LPAREN ID RPAREN LBRACE program RBRACE (FINALLY LBRACE program RBRACE)?
+throwStatement ::= THROW expression
+forStatement ::= FOR LPAREN statement SEMI expression? SEMI statement RPAREN statement
+functionCall ::= ID LPAREN argumentList? RPAREN
+argumentList ::= expression (COMMA expression)*

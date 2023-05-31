@@ -14,7 +14,7 @@ import javax.swing.*;
 public class QmlPsiImplUtil {
 
     public static String getKey(QmlProperty element) {
-        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.KEY);
+        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.IDENTIFIER);
         if (keyNode != null) {
             // IMPORTANT: Convert embedded escaped spaces to simple spaces
             return keyNode.getText().replaceAll("\\\\ ", " ");
@@ -23,21 +23,21 @@ public class QmlPsiImplUtil {
         }
     }
 
-    public static String getValue(QmlProperty element) {
-        ASTNode valueNode = element.getNode().findChildByType(QmlTypes.VALUE);
-        if (valueNode != null) {
-            return valueNode.getText();
-        } else {
-            return null;
-        }
-    }
+//    public static String getValue(QmlProperty element) {
+//        ASTNode valueNode = element.getNode().findChildByType(QmlTypes.ASSIGNMENT_VALUE);
+//        if (valueNode != null) {
+//            return valueNode.getText();
+//        } else {
+//            return null;
+//        }
+//    }
 
     public static String getName(QmlProperty element) {
         return getKey(element);
     }
 
     public static PsiElement setName(QmlProperty element, String newName) {
-        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.KEY);
+        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.DOT_CHAIN_NAME);
         if (keyNode != null) {
             QmlProperty property = QmlElementFactory.createProperty(element.getProject(), newName);
             ASTNode newKeyNode = property.getFirstChild().getNode();
@@ -47,7 +47,7 @@ public class QmlPsiImplUtil {
     }
 
     public static PsiElement getNameIdentifier(QmlProperty element) {
-        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.KEY);
+        ASTNode keyNode = element.getNode().findChildByType(QmlTypes.DOT_CHAIN_NAME);
         if (keyNode != null) {
             return keyNode.getPsi();
         } else {

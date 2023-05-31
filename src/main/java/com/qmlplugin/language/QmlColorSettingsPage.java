@@ -14,11 +14,11 @@ import java.util.Map;
 public class QmlColorSettingsPage implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-            new AttributesDescriptor("Key", QmlSyntaxHighlighter.KEY),
-            new AttributesDescriptor("Separator", QmlSyntaxHighlighter.SEPARATOR),
-            new AttributesDescriptor("Value", QmlSyntaxHighlighter.VALUE),
             new AttributesDescriptor("Bad value", QmlSyntaxHighlighter.BAD_CHARACTER),
             new AttributesDescriptor("Keyword", QmlSyntaxHighlighter.KEYWORD),
+            new AttributesDescriptor("Base types", QmlSyntaxHighlighter.BASE_TYPE),
+            new AttributesDescriptor("Number", QmlSyntaxHighlighter.NUMBER),
+            new AttributesDescriptor("String", QmlSyntaxHighlighter.STRING),
     };
 
     @Nullable
@@ -37,21 +37,58 @@ public class QmlColorSettingsPage implements ColorSettingsPage {
     @Override
     public String getDemoText() {
         return """
-                for
-                in
-                            
-                # You are reading the ".properties" entry.
-                ! The exclamation mark can also mark text as comments.
-                website = https://en.wikipedia.org/
-                language = English
-                # The backslash below tells the application to continue reading
-                # the value onto the next line.
-                message = Welcome to \\
-                          Wikipedia!
-                # Add spaces to the key
-                key\\ with\\ spaces = This is the value that could be looked up with the key "key with spaces".
-                # Unicode
-                tab : \\u0009""";
+                import QtQuick 2.2
+                
+                Rectangle {
+                    id: root
+                    q: e
+                    /* */ property var x: 22
+                    property var xxx
+                //    property var theArray: []
+                //    property var theDate: new Date()
+                //    readonly property alias y: 0  // must be failed
+                    readonly property alias y: q
+                        /*  ; /* */
+                                
+                    enum TextType {
+                        Normal,
+                        Heading
+                    }
+                                
+                    property alias buttonText: textItem.text
+                                
+                    Behavior on opacity {
+                        NumberAnimation { duration: 300 }
+                    }
+                                
+                    Rectangle {
+                        signal processInput(int text, var i)
+                        signal processInput
+                        signal processInput()
+                                
+                        width: 100; height: 30
+                                
+                        // color: root.selected || !enabled ? "blue" : "red"
+                    }
+                                
+                    function loadNextScene(userAuthorization){
+                //        mainStackView.replace(userAuthorization)
+                //        intro.destroy()
+                //
+                //        if (!generalInfo.location) {
+                //            criticalErrorPopup.setError(qsTranslate("location", "failed_to_get_location"),
+                //                                        qsTranslate("location", "check_location"))
+                //            return
+                //        }
+                //        return settings.introEnabled ? intro : userAuthorization
+                    }
+                //    Component.onCompleted: {
+                //        for (var i = 0; i < 10; i++)
+                //            theArray.push("Item " + i)
+                //        console.log("There are", theArray.length, "items in the array")
+                //        console.log("The time is", theDate.toUTCString())
+                //    }
+                }""";
     }
 
     @Nullable

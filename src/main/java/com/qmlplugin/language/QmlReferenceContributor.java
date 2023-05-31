@@ -20,10 +20,10 @@ public class QmlReferenceContributor extends PsiReferenceContributor {
     @Override
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
 
-        var patterns = PlatformPatterns.psiElement(QmlTypes.VALUE)
-                .withParent(PlatformPatterns.psiElement(QmlTypes.PROPERTY))
-//                .withSuperParent(2, PlatformPatterns.psiElement(XmlElementType.XML_TAG))
-                .withLanguage(QmlLanguage.INSTANCE);
+//        var patterns = PlatformPatterns.psiElement(QmlTypes.ASSIGNMENT_VALUE)
+//                .withParent(PlatformPatterns.psiElement(QmlTypes.ASSIGNMENT))
+////                .withSuperParent(2, PlatformPatterns.psiElement(XmlElementType.XML_TAG))
+//                .withLanguage(QmlLanguage.INSTANCE);
 //        registrar.registerReferenceProvider(patterns,
 
         registrar.registerReferenceProvider(PlatformPatterns.psiElement(QmlPropertyImpl.class),

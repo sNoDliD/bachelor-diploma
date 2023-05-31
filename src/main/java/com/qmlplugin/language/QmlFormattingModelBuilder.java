@@ -10,11 +10,10 @@ import org.jetbrains.annotations.NotNull;
 public class QmlFormattingModelBuilder implements FormattingModelBuilder {
     private static SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
         return new SpacingBuilder(settings, QmlLanguage.INSTANCE)
-                .around(QmlTypes.SEPARATOR)
-                .spaceIf(settings.getCommonSettings(QmlLanguage.INSTANCE.getID()).SPACE_AROUND_ASSIGNMENT_OPERATORS)
-                .between(QmlTypes.CRLF, QmlTypes.PROPERTY)
-                .none();
-//        .between(TokenSet.ANY, TokenSet.ANY).none();
+                .before(QmlTypes.COLON).none()
+                .after(QmlTypes.COLON)
+                .spaceIf(settings.getCommonSettings(QmlLanguage.INSTANCE.getID()).SPACE_AFTER_COLON)
+        ;
     }
 
     @Override

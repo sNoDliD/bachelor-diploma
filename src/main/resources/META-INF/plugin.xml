@@ -43,7 +43,7 @@ Features for successful parsed files:
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
   <extensions defaultExtensionNs="com.intellij">
 
-    <fileType name="QML File" implementationClass="com.qmlplugin.language.QmlFileType" fieldName="INSTANCE"
+    <fileType name="QML" implementationClass="com.qmlplugin.language.QmlFileType" fieldName="INSTANCE"
               language="QML" extensions="qml"/>
     <lang.parserDefinition language="QML" implementationClass="com.qmlplugin.language.QmlParserDefinition"/>
     <lang.syntaxHighlighterFactory language="QML"
@@ -74,7 +74,8 @@ Features for successful parsed files:
     <lang.documentationProvider language="QML" implementationClass="com.qmlplugin.language.QmlDocumentationProvider"/>
     <spellchecker.support language="QML" implementationClass="com.qmlplugin.language.QmlSpellcheckingStrategy"/>
 
-    <additionalTextAttributes scheme="Default" file="colorSchemes/MyLangDefault.xml"/>
+<!--    <additionalTextAttributes scheme="QML Scheme" file="colorSchemes/QmlDefault.xml"/>-->
+    <bundledColorScheme path="colorSchemes/QmlDefault"/>
 
   </extensions>
 </idea-plugin>

@@ -1,80 +1,185 @@
 {
   tokens=[
     SEMI=';'
+    COLON=':'
+    DOT='.'
+    COMMA=','
     EQ='='
     LP='('
     RP=')'
+    LB='{'
+    RB='}'
+    L_BRACKET='['
+    R_BRACKET=']'
 
-    NEW_LINE='regexp:\s*\n+\s*'
-    space='regexp:\s+'
-    lint_comment='regexp://.*'
-    comment='regexp:(//.*)|(/\*(.|\s)*?\*/)'
-    number='regexp:\d+(\.\d*)?'
+    // BOOLEAN
+    LESS_EQ='<='
+    LESS='<'
+    GRATER_EQ='>='
+    GRATER='>'
+    T_EQ='==='
+    D_EQ='=='
+    EQ='='
+    D_NOT_EQ='!=='
+    NOT_EQ='!='
+    LAZY_OR='||'
+    OR='|'
+    LAZY_AND='&&'
+    AND='&'
+    NOT="!"
+    Q_MARK="?"
+
+    // MATH
+    MULT='*'
+    DIV='/'
+    MINUS='-'
+    PLUS="+"
+    PERCENT="%"
+
+    white_space='regexp:\s+'
+    NEW_LINE='regexp:\n'
+    COMMENT='regexp:(//.*)|(/\*(.|\s)*?\*/)'
+    INT='regexp:\d+?'
     FLOAT='regexp:\d+(\.\d*)?'
-    KEYWORD='regexp:import|as'
-//    IDENTIFIER='regexp:\w*'
-    IDENTIFIER='regexp:\p{Alpha}\w*'
+    BASE_TYPE='regexp:double|enumeration|int|list|real|string|url|var|date|point|rect|size'
+    KEYWORD='regexp:import|bool'
+    IDENTIFIER='regexp:[a-zA-Z_]\w*'
     STRING="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\.)*\")"
-
-    op_1='+'
-    op_2='-'
-    op_3='*'
-    op_4='/'
-    op_5='!'
-    dot='.'
   ]
 
-//  name(".*expr")='expression'
-//  extends(".*expr")=expr
     pin("import_.*")=1
+
+    parserClass="com.qmlplugin.language.parser.QmlParser"
+
+    extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+    psiClassPrefix="Qml"
+    psiImplClassSuffix="Impl"
+    psiPackage="com.qmlplugin.language.psi"
+    psiImplPackage="com.qmlplugin.language.psi.impl"
+
+    elementTypeHolderClass="com.qmlplugin.language.psi.QmlTypes"
+    elementTypeClass="com.qmlplugin.language.psi.QmlElementType"
+    tokenTypeClass="com.qmlplugin.language.psi.QmlTokenType"
+
+    psiImplUtilClass="com.qmlplugin.language.psi.impl.QmlPsiImplUtil"
 }
 
-root ::= imports root_object? (NEW_LINE | comment)*
-//root ::= imports
-//root ::= qml_object
+
+root ::= imports root_object (NEW_LINE | COMMENT)*
 
 // IMPORTS
-private imports ::= (NEW_LINE | comment | (import_item (NEW_LINE | SEMI)))*
-import_item ::= !<<eof>> "import" comment* import_location ["as" identifier] {
-    pin=2
-    recoverWhile=import_item_recover
+private imports ::= (NEW_LINE | COMMENT | (import_item SEMI?))*
+import_item ::= "import" COMMENT* import_location ["as" identifier] {
+//    recoverWhile=import_item_recover
 }
-private import_item_recover ::= !(NEW_LINE | SEMI)
+//private import_item_recover ::= !(NEW_LINE | SEMI)
 
 private import_location ::= import_version | import_path
-import_version ::= import_name FLOAT
+import_version ::= import_name (FLOAT | INT)
 import_name ::= identifier [DOT identifier] {
     pin=1
-    recoverWhile=import_name_recover
+//    recoverWhile=import_name_recover
 }
-private import_name_recover ::= !(NEW_LINE | FLOAT)
+//private import_name_recover ::= !(NEW_LINE | FLOAT)
 import_path ::= string
 
 // OBJECT
-root_object ::= !<<eof>> qml_object
+root_object ::= object_name qml_object { pin(".*")=1}
 
-qml_object ::= object_name "{" (NEW_LINE | comment | assignment_item (NEW_LINE | SEMI))*  "}" {
-    pin=1
-    recoverWhile=qml_object_recover
-}
-private qml_object_recover ::= !("}" | ) // WTF
+//qml_object ::= object_name "{" (NEW_LINE | COMMENT | assignment_item (NEW_LINE | SEMI))*  "}" {
+//qml_object ::= (LB (free_space | object_content)* RB)
+qml_object ::= skip (LB skip (object_content required_end)* RB)
+private skip ::= (NEW_LINE | COMMENT)*
+object_content ::= id_field
+                | enum_field
+                | property_alias_field
+                | property_field
+                | signal_field
+                | behavior
+                | functionDeclaration
+                | (object_name (qml_object | assignment))
 //private qml_object_recover ::= !("}" | <<eof>>)
-object_name ::= identifier [DOT identifier] {
-    pin=1
-//    recoverWhile=object_name_recover
-}
-private object_name_recover ::= !("{")
+id_field ::= "id" COLON identifier  {pin=1}
+enum_field ::= "enum" IDENTIFIER LB (NEW_LINE | COMMENT)+ IDENTIFIER (skip COMMA skip IDENTIFIER)* skip RB {pin=1}
+property_alias_field ::= ["readonly"] "property" "alias" IDENTIFIER COLON dot_chain_name {pin=3}
+property_field ::= ["readonly"] "property" (BASE_TYPE | IDENTIFIER) IDENTIFIER [assignment] {pin=2}
+signal_field ::= "signal" IDENTIFIER [LP (BASE_TYPE IDENTIFIER)? (COMMA BASE_TYPE IDENTIFIER)* RP]
+behavior ::= "Behavior" "on" dot_chain_name (LB (free_space | (object_name qml_object))* RB)
+//function_field ::= "function" IDENTIFIER (LP IDENTIFIER? (COMMA IDENTIFIER)* RP) function_body
+//function_body ::= js_program
+//function_body ::= LB (function_item | free_space)* RB
+//function_item ::= dot_chain_name LP IDENTIFIER? (COMMA IDENTIFIER)* RP
 
-assignment_item ::= assignment_name ":" assignment_value {
-    pin(".*")=1
-//    recoverWhile=assignment_item_recover
-}
-private assignment_item_recover ::= !("}" | NEW_LINE | SEMI)
-assignment_value ::= float | number | string | dotted_name
+object_name ::= identifier [DOT identifier]
+assignment ::= COLON (&LB js_program | statement)
+//functionDeclaration ::= "function" dot_chain_name? LP parameterList? RP LB (NEW_LINE | COMMENT)* js_program RB {pin=1}
 
-//import_name ::= dotted_name
-assignment_name ::= dotted_name
-private dotted_name ::= identifier [DOT identifier] {
-//    pin=1
-//    recoverWhile=dotted_name_recover
-}
+//assignment_value ::= NOT* (test | p_assignment_value)
+//private left test ::= p_assignment_value LAZY_OR p_assignment_value
+//
+//private p_assignment_value ::= INT | FLOAT | STRING | dot_chain_name
+
+//assignment_name ::= dotted_name
+//private dotted_name ::= identifier [DOT identifier]
+dot_chain_name ::= identifier (DOT identifier)*
+private free_space ::= NEW_LINE | SEMI | COMMENT
+private required_end ::= SEMI | NEW_LINE | COMMENT+ SEMI
+
+// expressions
+expression ::= conditionalExpression
+private conditionalExpression ::= logicalExpression (Q_MARK expression COLON expression)*
+private logicalExpression ::= equalityExpression (NEW_LINE | COMMENT)* ((OR | LAZY_OR| AND | LAZY_AND) (NEW_LINE | COMMENT)* equalityExpression)*
+private equalityExpression ::= relationalExpression ((D_EQ | T_EQ | NOT_EQ | D_NOT_EQ) relationalExpression)*
+private relationalExpression ::= additiveExpression ((LESS | GRATER | LESS_EQ | GRATER_EQ) additiveExpression)*
+private additiveExpression ::= multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
+private multiplicativeExpression ::= unaryExpression  ((MULT | DIV | PERCENT) unaryExpression)*
+private unaryExpression ::= (NEW_LINE | COMMENT | NOT | MINUS)* primaryExpression
+private primaryExpression ::= "null" | literal | dot_chain_name | LP expression RP
+private literal ::= STRING | FLOAT | INT
+
+
+// JS
+js_program ::= (statement required_end (NEW_LINE | COMMENT | SEMI)*)* statement?
+//js_program ::= (statement (NEW_LINE | SEMI) (NEW_LINE | COMMENT | SEMI)*)*
+private statement ::= variableDeclaration
+                    | functionDeclaration
+                    | returnStatement
+                    | new_statement
+                    | ifStatement
+                    | whileStatement
+                    | switchStatement
+                    | tryCatchStatement
+                    | throwStatement
+                    | SEMI+
+//                    | (NEW_LINE | COMMENT)+
+//                    | js_assignment
+                    | bracket_statement
+                    | js_expression // (NEW_LINE | COMMENT | SEMI)*
+//                    |
+private bracket_statement ::= LB js_program  RB
+variableDeclaration ::= ("let" | "var" | "const") IDENTIFIER (EQ js_expression)?
+functionDeclaration ::= "function" dot_chain_name? LP parameterList? RP LB (NEW_LINE | COMMENT)* js_program RB {pin=1}
+parameterList ::= IDENTIFIER (COMMA IDENTIFIER)*
+returnStatement ::= "return" (NEW_LINE | COMMENT)* js_expression? SEMI?
+new_statement ::= "new" IDENTIFIER [LP argumentList? RP]
+ifStatement ::= "if" LP js_expression RP js_program ("else" js_program)?
+    whileStatement ::= "while" LP js_expression RP statement
+    switchStatement ::= "switch" LP js_expression RP LB caseStatement* (defaultStatement)? RB
+    caseStatement ::= "case" js_expression COLON js_program
+    defaultStatement ::= "default" COLON js_program
+//js_assignment ::= dot_chain_name EQ js_expression
+//js_expression ::= literal | dot_chain_name | functionDeclaration | LP js_expression RP | js_expression (PLUS | MINUS | MULT | DIV) js_expression | arrayDeclaration
+js_expression ::= functionDeclaration | LP js_expression RP | arrayDeclaration
+                | function_call_lookup functionCall
+                | expression
+private js_expression_for_function ::= arrayDeclaration
+            | function_call_lookup functionCall | expression
+
+arrayDeclaration ::= L_BRACKET (js_expression (COMMA js_expression)*)? R_BRACKET
+    tryCatchStatement ::= "try" LB js_program RB "catch" LP IDENTIFIER RP LB js_program RB ("finally" LB js_program RB)?
+    throwStatement ::= "throw" js_expression
+
+private function_call_lookup ::= &(dot_chain_name LP)
+functionCall ::= dot_chain_name LP argumentList? RP {pin=2}
+argumentList ::= js_expression_for_function ((NEW_LINE| COMMENT)* COMMA NEW_LINE* js_expression_for_function )* &RP

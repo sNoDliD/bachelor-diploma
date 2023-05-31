@@ -1,0 +1,14 @@
+{
+    tokens = [
+        PLUS="+"
+        MINUS="-"
+
+        INT='regexp:\d+'
+        SPACES='regexp:\s+'
+    ]
+}
+
+language ::= exp
+exp ::= opar_exp
+opar_exp ::= unary_exp (PLUS exp | MINUS exp)?
+unary_exp ::= MINUS INT | INT

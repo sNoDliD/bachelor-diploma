@@ -18,7 +18,7 @@ public class QmlPropertyImpl extends QmlNamedElementImpl implements QmlProperty 
   }
 
   public void accept(@NotNull QmlVisitor visitor) {
-    visitor.visitProperty(this);
+//    visitor.visitProperty(this);
   }
 
   @Override
@@ -34,7 +34,8 @@ public class QmlPropertyImpl extends QmlNamedElementImpl implements QmlProperty 
 
   @Override
   public String getValue() {
-    return QmlPsiImplUtil.getValue(this);
+    return null;
+//    return QmlPsiImplUtil.getValue(this);
   }
 
   @Override
